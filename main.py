@@ -52,7 +52,7 @@ if __name__ == '__main__':
                         help='Show all bounding box from detection.')
     par.add_argument('--show_skeleton', default=True, action='store_true',
                         help='Show skeleton pose.')
-    par.add_argument('--save_out', type=str, default='',
+    par.add_argument('--save_out', type=str, default='result.avi',
                         help='Save display to video file.')
     par.add_argument('--device', type=str, default='cuda',
                         help='Device to run model on cpu or cuda.')
@@ -176,12 +176,12 @@ if __name__ == '__main__':
         if outvid:
             writer.write(frame)
 
-        cv2.imshow('frame', frame)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+#         cv2.imshow('frame', frame)
+#         if cv2.waitKey(1) & 0xFF == ord('q'):
+#             break
 
     # Clear resource.
     cam.stop()
     if outvid:
         writer.release()
-    cv2.destroyAllWindows()
+#     cv2.destroyAllWindows()
