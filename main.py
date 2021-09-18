@@ -94,7 +94,7 @@ if __name__ == '__main__':
     if args.save_out != '':
         outvid = True
         codec = cv2.VideoWriter_fourcc(*'MJPG')
-        writer = cv2.VideoWriter(args.save_out, codec, 30, (inp_dets * 2, inp_dets * 2))
+        writer = cv2.VideoWriter(args.save_out, codec, 10, (inp_dets * 2, inp_dets * 2))
 
     fps_time = 0
     f = 0
