@@ -50,6 +50,8 @@ class CamLoader:
             self.read_lock.release()
 
     def grabbed(self):
+        if self.ret == False:
+          print(1)
         """Return `True` if can read a frame."""
         return self.ret
 
@@ -90,17 +92,17 @@ class CamLoader_Q:
         queue_size: (int) Maximum queue size. Default: 256,
         preprocess: (Callable function) to process the frame before return.
     """
-    def __init__(self, camera, batch_size=1, queue_size=256, preprocess=None):
+    def __init__(self, camera, batch_size=1, preprocess=None):
         self.stream = cv2.VideoCapture(camera)
         assert self.stream.isOpened(), 'Cannot read camera source!'
         self.fps = self.stream.get(cv2.CAP_PROP_FPS)
         self.frame_size = (int(self.stream.get(cv2.CAP_PROP_FRAME_WIDTH)),
                            int(self.stream.get(cv2.CAP_PROP_FRAME_HEIGHT)))
-
+        self.length_vid = self.stream.get(cv2.CAP_PROP_FRAME_COUNT)
         # Queue for storing each frames.
         self.stopped = False
         self.batch_size = batch_size
-        self.Q = Queue(maxsize=queue_size)
+        self.Q = Queue(maxsize=self.length_vid)
 
         self.preprocess_fn = preprocess
 
