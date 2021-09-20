@@ -17,7 +17,7 @@ from ActionsEstLoader import TSSTG
 
 #source = '../Data/test_video/test7.mp4'
 #source = '../Data/falldata/Home/Videos/video (2).avi'  # hard detect
-source = '../Data/falldata/Home/Videos/video (1).avi'
+source = '/content/Human-Falling-Detect-Tracks/Data/5.mp4'
 #source = 2
 
 
@@ -77,11 +77,11 @@ if __name__ == '__main__':
     action_model = TSSTG()
 
     resize_fn = ResizePadding(inp_dets, inp_dets)
-
     cam_source = args.camera
     if type(cam_source) is str and os.path.isfile(cam_source):
         # Use loader thread with Q for video file.
-        cam = CamLoader_Q(cam_source, queue_size=1000, preprocess=preproc).start()
+        cam = CamLoader_Q(cam_source, preprocess=preproc).start()
+        print("Total frame: ", cam.length_vid)
     else:
         # Use normal thread loader for webcam.
         cam = CamLoader(int(cam_source) if cam_source.isdigit() else cam_source,
@@ -91,12 +91,13 @@ if __name__ == '__main__':
     #scf = torch.min(inp_size / torch.FloatTensor([frame_size]), 1)[0]
 
     outvid = False
-    video = cv2.VideoCapture(source);
-    fps = video.get(cv2.CAP_PROP_FPS)
+    # video = cv2.VideoCapture(source);
+    # fps = video.get(cv2.CAP_PROP_FPS)
     if args.save_out != '':
         outvid = True
         codec = cv2.VideoWriter_fourcc(*'MJPG')
-        writer = cv2.VideoWriter(args.save_out, codec, fps, (inp_dets * 2, inp_dets * 2))
+        writer = cv2.VideoWriter(args.save_out, codec, cam.fps, (inp_dets * 2, inp_dets * 2))
+        print("Video FPS: ", cam.fps)
 
     fps_time = 0
     f = 0
@@ -174,9 +175,7 @@ if __name__ == '__main__':
                             (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
         frame = frame[:, :, ::-1]
         fps_time = time.time()
-
-        if outvid:
-            writer.write(frame)
+        writer.write(frame)
 
 #         cv2.imshow('frame', frame)
 #         if cv2.waitKey(1) & 0xFF == ord('q'):
