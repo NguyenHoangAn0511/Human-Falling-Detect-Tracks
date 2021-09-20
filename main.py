@@ -91,10 +91,12 @@ if __name__ == '__main__':
     #scf = torch.min(inp_size / torch.FloatTensor([frame_size]), 1)[0]
 
     outvid = False
+    video = cv2.VideoCapture(source);
+    fps = video.get(cv2.CAP_PROP_FPS)
     if args.save_out != '':
         outvid = True
         codec = cv2.VideoWriter_fourcc(*'MJPG')
-        writer = cv2.VideoWriter(args.save_out, codec, 10, (inp_dets * 2, inp_dets * 2))
+        writer = cv2.VideoWriter(args.save_out, codec, fps, (inp_dets * 2, inp_dets * 2))
 
     fps_time = 0
     f = 0
